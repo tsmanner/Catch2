@@ -132,6 +132,7 @@ pub fn build(b: *std.Build) void {
     catch2.addIncludePath(.{ .path = "src/" });
     catch2.linkSystemLibrary("stdc++");
     b.installArtifact(catch2);
+    catch2.installConfigHeader(user_config, .{});
 
     const catch2_with_main = b.addStaticLibrary(.{
         .name = "Catch2Main",
