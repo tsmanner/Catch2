@@ -131,8 +131,8 @@ pub fn build(b: *std.Build) void {
     catch2.addConfigHeader(user_config);
     catch2.addIncludePath(.{ .path = "src/" });
     catch2.linkSystemLibrary("stdc++");
-    b.installArtifact(catch2);
     catch2.installConfigHeader(user_config, .{});
+    b.installArtifact(catch2);
 
     const catch2_with_main = b.addStaticLibrary(.{
         .name = "Catch2Main",
@@ -140,8 +140,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     catch2_with_main.addCSourceFile(.{ .file = .{ .path = "src/catch2/internal/catch_main.cpp" }, .flags = flags });
-    catch2_with_main.addConfigHeader(user_config);
     catch2_with_main.addIncludePath(.{ .path = "src/" });
-    catch2_with_main.linkSystemLibrary("stdc++");
+    catch2_with_main.linkLibrary(catch2);
     b.installArtifact(catch2_with_main);
 }
