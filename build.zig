@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     const user_config = b.addConfigHeader(.{
-        .style = .{ .cmake = .{ .path = "src/catch2/catch_user_config.hpp.in" } },
+        .style = .{ .cmake = b.path("src/catch2/catch_user_config.hpp.in") },
         .include_path = "catch2/catch_user_config.hpp",
     }, CatchUserConfig{});
 
@@ -133,18 +133,19 @@ pub fn build(b: *std.Build) void {
         .flags = flags,
     });
     catch2.addConfigHeader(user_config);
-    catch2.addIncludePath(.{ .path = "src/" });
-    catch2.linkSystemLibrary("stdc++");
+    catch2.addIncludePath(b.path("src"));
+    catch2.linkLibCpp();
     catch2.installConfigHeader(user_config);
+    catch2.installHeadersDirectory(b.path("src"), "", .{ .include_extensions = &.{"hpp"} });
     b.installArtifact(catch2);
 
-    const catch2_with_main = b.addStaticLibrary(.{
+    const catch2_main = b.addStaticLibrary(.{
         .name = "Catch2Main",
         .target = target,
         .optimize = optimize,
     });
-    catch2_with_main.addCSourceFile(.{ .file = .{ .path = "src/catch2/internal/catch_main.cpp" }, .flags = flags });
-    catch2_with_main.addIncludePath(.{ .path = "src/" });
-    catch2_with_main.linkLibrary(catch2);
-    b.installArtifact(catch2_with_main);
+    catch2_main.addCSourceFile(.{ .file = b.path("src/catch2/internal/catch_main.cpp"), .flags = flags });
+    catch2_main.addIncludePath(catch2.getEmittedIncludeTree());
+    catch2_main.linkLibrary(catch2);
+    b.installArtifact(catch2_main);
 }
