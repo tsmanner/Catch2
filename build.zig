@@ -3,6 +3,7 @@ const std = @import("std");
 pub const CatchUserConfig = struct {
     CATCH_CONFIG_CONSOLE_WIDTH: ?u32 = 80,
     CATCH_CONFIG_DEFAULT_REPORTER: ?[]const u8 = "console",
+    CATCH_CONFIG_FALLBACK_STRINGIFIER: ?[]const u8 = null,
 };
 
 pub fn build(b: *std.Build) void {

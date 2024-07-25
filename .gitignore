@@ -33,7 +33,9 @@ debug-build
 .vscode
 msvc-sln*
 build/
+# Zig 0.13.0 changed the local cache from zig-cache/ to .zig-cache/
 zig-cache/
+.zig-cache/
 zig-out/
 # Currently we use Doxygen for dep graphs and the full docs are only slowly
 # being filled in, so we definitely do not want git to deal with the docs.
